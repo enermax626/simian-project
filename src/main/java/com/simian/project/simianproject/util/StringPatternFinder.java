@@ -1,5 +1,7 @@
 package com.simian.project.simianproject.util;
 
+import com.simian.project.simianproject.exception.WrongStringFormatException;
+
 public class StringPatternFinder {
 
 	// used to compute the preprocessing array that KPM will use to improve its
@@ -126,9 +128,62 @@ public class StringPatternFinder {
 		return false;
 	}
 
-	public static boolean isPatternPresentInStringArray(String[] strigArray, char[] pattern) {
+	
+	public static boolean isAnyPatternPresentInStringArray(String[] stringArray, char[][] patterns){
+		
+		char[][] charMatrix = getCharMatrix(stringArray);
+		
+		if(!isValidInput(charMatrix,patterns))
+			throw new WrongStringFormatException("Wrong array size or character not expected, verify your data");
+		
+		for (char[] pattern : patterns) {
+			if (isPatternPresentInStringArray(charMatrix, pattern))
+				return true;
+		}
+		return false;
+	}
+	
+	
+	private static boolean isValidInput(char[][] input, char[][] patterns) {
+		long arraySize = input.length;
+		long stringSize = input[0].length;
+		boolean validCharacter = true;
+		
+		if (arraySize != stringSize)
+			return false;
+		
+		for (char[] string : input) {
+			if (string.length != stringSize)
+				return false;
+		}
+		
+		//populating pattern characters so we can compare all of them in the matrix.
+		char[] patternCharacters = new char[patterns.length];
+		for (int i = 0; i < patterns.length; i++) {
+			patternCharacters[i] = patterns[i][0];
+		}
 
-		char[][] charMatrix = getCharMatrix(strigArray);
+
+		for (int row = 0; row < arraySize; row++) {
+			for (int col = 0; col < arraySize; col++) {
+				if(!validCharacter)
+					return false;
+				validCharacter = false;
+				for (int pat = 0; pat < patternCharacters.length; pat++) {
+					if (input[row][col] == patternCharacters[pat])
+						validCharacter = true;
+				}
+			}
+		}
+
+		return true;
+
+	}
+
+	
+	private static boolean isPatternPresentInStringArray(char[][] charMatrix, char[] pattern) {
+
+		
 		if (!isPatternPresentInRowColumn(charMatrix, pattern)) {
 			if(!isPatternPresentInDiagonal(charMatrix,pattern)) {
 				return false;

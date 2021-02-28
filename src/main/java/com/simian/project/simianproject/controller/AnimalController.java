@@ -38,6 +38,7 @@ public class AnimalController {
 	@PostMapping(path = "/simian")
 	public ResponseEntity<Animal> registerAnimal(@RequestBody AnimalRegisterDTO animalRegisterDTO) {
 		Animal registeredAnimal = animalService.registerAnimal(animalMapper.toAnimal(animalRegisterDTO));
+		
 		if(registeredAnimal.getAnimalType().equals(AnimalOrder.SIMIAN))
 			return new ResponseEntity<Animal>(registeredAnimal,HttpStatus.OK);
 		return new ResponseEntity<Animal>(registeredAnimal,HttpStatus.FORBIDDEN);
