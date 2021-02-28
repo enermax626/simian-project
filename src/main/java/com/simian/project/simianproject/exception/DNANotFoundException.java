@@ -3,13 +3,12 @@ package com.simian.project.simianproject.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.BAD_REQUEST)
-public class WrongStringFormatException extends RuntimeException {
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class DNANotFoundException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public WrongStringFormatException(String message) {
+    public DNANotFoundException(String message) {
         super(message);
     }
-
 }

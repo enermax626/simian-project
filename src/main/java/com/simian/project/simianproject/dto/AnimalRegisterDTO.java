@@ -2,15 +2,15 @@ package com.simian.project.simianproject.dto;
 
 public class AnimalRegisterDTO {
 
-	private String[] DNA;
+    private String[] DNA;
 
-	public String[] getDNA() {
-		return DNA;
-	}
+    public String[] getDNA() {
+        return DNA;
+    }
 
-	public void setDNA(String[] dNA) {
-		DNA = dNA;
-	}
+    public void setDNA(String[] dNA) {
+        DNA = dNA;
+    }
 
-	
+
 }
