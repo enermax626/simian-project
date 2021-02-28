@@ -1,7 +1,5 @@
 package com.simian.project.simianproject.controller;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +19,6 @@ import com.simian.project.simianproject.service.AnimalService;
 
 @RestController()
 @RequestMapping("/")
-
 public class AnimalController {
 
 	private AnimalService animalService;
@@ -34,20 +31,8 @@ public class AnimalController {
 	
 	@GetMapping(path = "/stats")
 	@ResponseStatus(code = HttpStatus.OK)
-	public AnimalStatistic getDNAStatistic() {
+	public AnimalStatistic getAnimalStatistic() {
 		return animalService.getAnimalStatistic("HUMAN");
-	}	
-		
-	@GetMapping(path = "/stats/quantity")
-	@ResponseStatus(code = HttpStatus.OK)
-	public int getAnimalQuantity() {
-		return animalService.getAnimalQuantity();
-	}	
-	
-	@GetMapping(path = "/simian")
-	@ResponseStatus(code = HttpStatus.OK)
-	public List<Animal> getAllAnimals() {
-		return animalService.getAllAnimals();
 	}	
 		
 	@PostMapping(path = "/simian")
@@ -57,4 +42,5 @@ public class AnimalController {
 			return new ResponseEntity<Animal>(registeredAnimal,HttpStatus.OK);
 		return new ResponseEntity<Animal>(registeredAnimal,HttpStatus.FORBIDDEN);
 	}
+	
 }

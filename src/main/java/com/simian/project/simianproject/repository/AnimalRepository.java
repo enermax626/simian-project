@@ -13,8 +13,4 @@ public interface AnimalRepository extends JpaRepository<Animal, Long>{
 	@Query(value = "SELECT count(1) FROM Animal a where a.animalType=:animalType")
 	public long getAnimalStatistic(AnimalOrder animalType);
 	
-
-	@Query(value = "SELECT count(1) FROM Animal a")
-	public int getAnimalQuantity();
-	
 }

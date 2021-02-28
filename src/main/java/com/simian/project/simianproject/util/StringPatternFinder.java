@@ -60,26 +60,43 @@ public class StringPatternFinder {
 
 		return 0;
 	}
-	
-	// It's similar to KMP algorithm but some changes were made because we don't
-	// need to search in whole matrix
-	// since it is not fully populated.
-	private static boolean isPatternPresentInDiagonalRow(char[][] charArrayMatrix, char pattern[]) {
 
-		int N = charArrayMatrix.length;
-		int charInRow = 4;
-
-		for (int i = 3; i < N - 3; i++) {
-
-			// search in each row
-			if (KMPSearch(pattern, charArrayMatrix[i], charInRow) == 1)
-				return true;
-			charInRow++;
+	private static boolean isPatternPresentInDiagonal(char[][] matrix, char pattern[]) {
+		
+		int matrixSize = matrix.length;
+		int patternSize = pattern.length;
+		int x=0;
+		
+		
+		//Validates the left to right diagonal
+		for(int i=0; i<matrixSize - (patternSize - 1 ); i++) {
+			for(int j=0; j<matrixSize - (patternSize - 1 );j++) {
+				x=0;
+				while(matrix[i+x][j+x] == pattern[x] && x < patternSize) {
+					x+=1;
+					if(x== patternSize)
+						return true;
+				}
+			}
 		}
+		//Validates the right to left diagonal
+		for(int i=0; i<matrixSize - (patternSize - 1); i++) {
+			for(int j=(patternSize - 1); j<matrixSize;j++) {
+				x=0;
+				while(matrix[i+x][j-x] == pattern[x] && x < patternSize) {
+					x+=1;
+					if(x== patternSize)
+						return true;
+				}
+			}
+		}
+		
+		
 		return false;
+		
 	}
 
-	// if we didn't limit it to 'char',
+	// if I didn't limit it to 'char',
 	// this could be expanded or modified to object so it would be able to compare
 	// objects
 	// and find a pattern in a matrix of any type.
@@ -112,23 +129,16 @@ public class StringPatternFinder {
 	public static boolean isPatternPresentInStringArray(String[] strigArray, char[] pattern) {
 
 		char[][] charMatrix = getCharMatrix(strigArray);
-
 		if (!isPatternPresentInRowColumn(charMatrix, pattern)) {
-			char[][] diagonalCharMatrix = getdiagonalOrderMatrix(charMatrix);
-			if (!isPatternPresentInDiagonalRow(diagonalCharMatrix, pattern)) {
-				diagonalCharMatrix = getdiagonalOrderMatrix(invertMatrix(charMatrix));
-				if (!isPatternPresentInDiagonalRow(diagonalCharMatrix, pattern)) {
-					return false;
-				}
+			if(!isPatternPresentInDiagonal(charMatrix,pattern)) {
+				return false;
 			}
 		}
 
 		return true;
 	}
 	
-	
-	
-	
+		
 
 	private static char[][] getCharMatrix(String[] stringArray) {
 
@@ -139,70 +149,6 @@ public class StringPatternFinder {
 		}
 
 		return charMatrix;
-	}
-
-	private static char[][] getdiagonalOrderMatrix(char[][] charMatrix) {
-
-		int matrixSize = charMatrix.length;
-
-		char[][] diagonalMatrix = new char[2 * matrixSize - 1][2 * matrixSize - 1];
-
-		for (int line = 1; line <= (2 * matrixSize - 1); line++) {
-
-			int start_col = Integer.max(0, line - matrixSize);
-
-			int count = Integer.min(Integer.min(line, (matrixSize - start_col)), matrixSize);
-
-			for (int j = 0; j < count; j++) {
-				System.out.print(charMatrix[Integer.min(matrixSize, line) - j - 1][start_col + j] + " ");
-				diagonalMatrix[line - 1][j] = charMatrix[Integer.min(matrixSize, line) - j - 1][start_col + j];
-
-			}
-			System.out.println();
-		}
-		return diagonalMatrix;
-
-	}
-
-	private static char[][] invertMatrix(char[][] matrix) {
-
-		char[][] invertedMatrix = new char[matrix.length][matrix.length];
-
-		for (int i = 0; i < matrix.length; i++) {
-			for (int j = 0; j < matrix.length; j++) {
-				invertedMatrix[i][j] = matrix[i][matrix.length - j - 1];
-			}
-		}
-		return invertedMatrix;
-	}
-
-	// Utility function to print a String Matrix
-	static void printMatrix(String matrix[]) {
-
-		int matrixSize = matrix.length;
-
-		char[][] diagonalMatrixArray = new char[matrixSize][matrixSize];
-
-		for (int i = 0; i < matrix.length; i++) {
-			diagonalMatrixArray[i] = matrix[i].toCharArray();
-		}
-
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++)
-				System.out.print(diagonalMatrixArray[i][j] + " ");
-			System.out.print("\n");
-		}
-	}
-
-	static void printCharMatrix(char[][] matrix) {
-
-		System.out.println("PRINTANDO MATRIX");
-		for (int i = 0; i < matrix.length; i++) {
-			for (int j = 0; j < matrix.length; j++) {
-				System.out.print(matrix[i][j] + " ");
-			}
-			System.out.println();
-		}
 	}
 
 }
