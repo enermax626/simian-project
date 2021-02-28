@@ -60,7 +60,7 @@ public class StringPatternFinder {
 
 		return 0;
 	}
-
+	
 	// It's similar to KMP algorithm but some changes were made because we don't
 	// need to search in whole matrix
 	// since it is not fully populated.
@@ -125,6 +125,10 @@ public class StringPatternFinder {
 
 		return true;
 	}
+	
+	
+	
+	
 
 	private static char[][] getCharMatrix(String[] stringArray) {
 
