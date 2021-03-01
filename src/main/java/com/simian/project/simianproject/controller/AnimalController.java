@@ -26,7 +26,7 @@ public class AnimalController {
     @GetMapping(path = "/stats")
     @ResponseStatus(code = HttpStatus.OK)
     public AnimalStatistic getAnimalStatistic() {
-        return animalService.getAnimalStatistic("HUMAN");
+        return animalService.getAnimalStatistic();
     }
 
     @PostMapping(path = "/simian")

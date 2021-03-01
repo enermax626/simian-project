@@ -1,12 +1,16 @@
 package com.simian.project.simianproject.util;
 
 import com.simian.project.simianproject.exception.WrongStringFormatException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class StringPatternFinder {
+
 
     // used to compute the preprocessing array that KPM will use to improve its
     // performance.
-    private static void computeLPSArray(char pat[], int M, int lps[]) {
+    private void computeLPSArray(char pat[], int M, int lps[]) {
         int len = 0;
         int i = 1;
         lps[0] = 0;
@@ -27,7 +31,7 @@ public class StringPatternFinder {
 
     }
 
-    private static int KMPSearch(char pattern[], char txt[], int N) {
+    private int KMPSearch(char pattern[], char txt[], int N) {
 
         int M = pattern.length;
 
@@ -61,7 +65,7 @@ public class StringPatternFinder {
         return 0;
     }
 
-    private static boolean isPatternPresentInDiagonal(char[][] matrix, char pattern[]) {
+    private boolean isPatternPresentInDiagonal(char[][] matrix, char pattern[]) {
 
         int matrixSize = matrix.length;
         int patternSize = pattern.length;
@@ -90,10 +94,7 @@ public class StringPatternFinder {
                 }
             }
         }
-
-
         return false;
-
     }
 
     // if I didn't limit it to 'char',
@@ -101,7 +102,7 @@ public class StringPatternFinder {
     // objects
     // and find a pattern in a matrix of any type.
     // It uses KMP pattern searching algorithm
-    private static boolean isPatternPresentInRowColumn(char[][] charArrayMatrix, char pattern[]) {
+    private boolean isPatternPresentInRowColumn(char[][] charArrayMatrix, char pattern[]) {
 
         int N = charArrayMatrix.length;
         char[] col = new char[N];
@@ -127,7 +128,7 @@ public class StringPatternFinder {
     }
 
 
-    public static boolean isAnyPatternPresentInStringArray(String[] stringArray, char[][] patterns) {
+    public boolean isAnyPatternPresentInStringArray(String[] stringArray, char[][] patterns) {
 
         char[][] charMatrix = getCharMatrix(stringArray);
 
@@ -179,7 +180,7 @@ public class StringPatternFinder {
     }
 
 
-    private static boolean isPatternPresentInStringArray(char[][] charMatrix, char[] pattern) {
+    private boolean isPatternPresentInStringArray(char[][] charMatrix, char[] pattern) {
 
 
         if (!isPatternPresentInRowColumn(charMatrix, pattern)) {

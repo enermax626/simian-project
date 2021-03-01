@@ -18,11 +18,14 @@ public class AnimalService {
 
     };
 
-    public AnimalService(AnimalRepository animalRepository) {
+    private StringPatternFinder stringPatternFinder;
+    private AnimalRepository animalRepository;
+
+
+    public AnimalService(AnimalRepository animalRepository, StringPatternFinder stringPatternFinder) {
+        this.stringPatternFinder = stringPatternFinder;
         this.animalRepository = animalRepository;
     }
-
-    private AnimalRepository animalRepository;
 
     public Animal registerAnimal(Animal animal) {
 
@@ -35,11 +38,10 @@ public class AnimalService {
             animal.setAnimalType(AnimalOrder.HUMAN);
 
         return animalRepository.save(animal);
-
     }
 
 
-    public AnimalStatistic getAnimalStatistic(String animalType) {
+    public AnimalStatistic getAnimalStatistic() {
         Long humanQuantity = animalRepository.getAnimalStatistic(AnimalOrder.HUMAN);
         Long simianQuantity = animalRepository.getAnimalStatistic(AnimalOrder.SIMIAN);
         double result = simianQuantity;
@@ -52,10 +54,7 @@ public class AnimalService {
     }
 
     private boolean isSimian(String[] dna) {
-        if (StringPatternFinder.isAnyPatternPresentInStringArray(dna, SIMIANPATTERNS))
-            return true;
-
-        return false;
+        return stringPatternFinder.isAnyPatternPresentInStringArray(dna, SIMIANPATTERNS);
     }
 
 }

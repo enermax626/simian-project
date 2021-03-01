@@ -1,6 +1,7 @@
 package com.simian.project.simianproject.domain;
 
 import javax.persistence.*;
+import java.util.Arrays;
 
 @Entity
 public class Animal {
@@ -43,4 +44,16 @@ public class Animal {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Animal animal = (Animal) o;
+        return Arrays.equals(DNA, animal.DNA);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(DNA);
+    }
 }
