@@ -1,8 +1,8 @@
-package com.simian.project.simianproject.util;
+package com.simian.project.simianproject.utilityTest;
 
 import com.simian.project.simianproject.domain.Animal;
 import com.simian.project.simianproject.domain.AnimalOrder;
-import com.simian.project.simianproject.domain.AnimalStatistic;
+import com.simian.project.simianproject.dto.AnimalStatisticDTO;
 import com.simian.project.simianproject.dto.AnimalRegisterDTO;
 
 public class AnimalCreator {
@@ -29,9 +29,9 @@ public class AnimalCreator {
         return animal;
     }
 
-    public static AnimalStatistic createAnimalStatistic() {
-        AnimalStatistic animalStatistic = new AnimalStatistic(Integer.toUnsignedLong(2),Integer.toUnsignedLong(8),0.2);
-        return animalStatistic;
+    public static AnimalStatisticDTO createAnimalStatistic() {
+        AnimalStatisticDTO animalStatisticDTO = new AnimalStatisticDTO(2L,8L);
+        return animalStatisticDTO;
     }
 
     public static AnimalRegisterDTO createValidHumanAnimalRegisterDTO() {
@@ -50,7 +50,7 @@ public class AnimalCreator {
         Animal animalRegistered = new Animal();
         animalRegistered.setDNA(new String[]{"CCGGTA", "GACGAC", "CGCGTC", "ACATGA", "CTACGC", "TCCGCA"});
         animalRegistered.setAnimalType(AnimalOrder.HUMAN);
-        animalRegistered.setId(Integer.toUnsignedLong(100));
+        animalRegistered.setId(100L);
         return animalRegistered;
     }
 
@@ -70,7 +70,7 @@ public class AnimalCreator {
         Animal animalRegistered = new Animal();
         animalRegistered.setDNA(new String[]{"CCGGTA", "GACGAC", "CCCCTC", "ACATGA", "CTACGC", "TCCGCA"});
         animalRegistered.setAnimalType(AnimalOrder.SIMIAN);
-        animalRegistered.setId(Integer.toUnsignedLong(101));
+        animalRegistered.setId(101L);
         return animalRegistered;
     }
 

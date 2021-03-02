@@ -1,13 +1,15 @@
-package com.simian.project.simianproject;
+package com.simian.project.simianproject.service;
 
 import com.simian.project.simianproject.domain.Animal;
 import com.simian.project.simianproject.domain.AnimalOrder;
-import com.simian.project.simianproject.domain.AnimalStatistic;
+import com.simian.project.simianproject.domain.AnimalStat;
+import com.simian.project.simianproject.dto.AnimalStatisticDTO;
 import com.simian.project.simianproject.exception.DNANotFoundException;
 import com.simian.project.simianproject.repository.AnimalRepository;
-import com.simian.project.simianproject.service.AnimalService;
-import com.simian.project.simianproject.util.AnimalCreator;
-import com.simian.project.simianproject.util.StringPatternFinder;
+import com.simian.project.simianproject.serviceImpl.AnimalServiceImpl;
+import com.simian.project.simianproject.utilityTest.AnimalCreator;
+import com.simian.project.simianproject.utilImpl.StringPatternFinderImpl;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,22 +20,25 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
-public class AnimalServiceTest {
+public class AnimalServiceImplTest {
 
     private final static char[][] SIMIANPATTERNS = {{'A', 'A', 'A', 'A'}, {'T', 'T', 'T', 'T'}, {'C', 'C', 'C', 'C'},
             {'G', 'G', 'G', 'G'}};
 
     @InjectMocks
-    private AnimalService animalService;
+    private AnimalServiceImpl animalServiceImpl;
 
     @Mock
     AnimalRepository animalRepositoryMock;
 
     @Mock
-    StringPatternFinder stringPatternFinder;
+    StringPatternFinderImpl stringPatternFinderImpl;
 
     @BeforeEach
     void setUp(){
@@ -43,24 +48,22 @@ public class AnimalServiceTest {
                 .thenReturn(AnimalCreator.createValidSimianAnimalRegisteredFromDTO());
 
         String[] humanDNA = AnimalCreator.createValidHumanAnimalToBeRegisteredFromDTO().getDNA();
-        BDDMockito.when(stringPatternFinder.isAnyPatternPresentInStringArray(ArgumentMatchers.eq(humanDNA),ArgumentMatchers.eq(SIMIANPATTERNS)))
+        BDDMockito.when(stringPatternFinderImpl.isAnyPatternPresentInStringArray(ArgumentMatchers.eq(humanDNA),ArgumentMatchers.eq(SIMIANPATTERNS)))
                 .thenReturn(false);
-
         String[] simianDNA = AnimalCreator.createValidSimianAnimalToBeRegisteredFromDTO().getDNA();
-        BDDMockito.when(stringPatternFinder.isAnyPatternPresentInStringArray(ArgumentMatchers.eq(simianDNA),ArgumentMatchers.eq(SIMIANPATTERNS)))
+        BDDMockito.when(stringPatternFinderImpl.isAnyPatternPresentInStringArray(ArgumentMatchers.eq(simianDNA),ArgumentMatchers.eq(SIMIANPATTERNS)))
                 .thenReturn(true);
 
-        BDDMockito.when(animalRepositoryMock.getAnimalStatistic(AnimalOrder.HUMAN))
-                .thenReturn(Integer.toUnsignedLong(8));
-        BDDMockito.when(animalRepositoryMock.getAnimalStatistic(AnimalOrder.SIMIAN))
-                .thenReturn(Integer.toUnsignedLong(2));
+
+
+
     }
 
 
     @Test
     void registerAnimal_HumanSuccess(){
         Animal humanToBeRegistered = AnimalCreator.createValidHumanAnimalToBeRegisteredFromDTO();
-        Animal humanRegistered = animalService.registerAnimal(humanToBeRegistered);
+        Animal humanRegistered = animalServiceImpl.registerAnimal(humanToBeRegistered);
 
         Assertions.assertNotNull(humanRegistered);
         Assertions.assertNotNull(humanRegistered.getId());
@@ -71,7 +74,7 @@ public class AnimalServiceTest {
     @Test
     void registerAnimal_SimianSuccess(){
         Animal simianToBeRegistered = AnimalCreator.createValidSimianAnimalToBeRegisteredFromDTO();
-        Animal simianRegistered = animalService.registerAnimal(simianToBeRegistered);
+        Animal simianRegistered = animalServiceImpl.registerAnimal(simianToBeRegistered);
 
         Assertions.assertNotNull(simianRegistered);
         Assertions.assertNotNull(simianRegistered.getId());
@@ -83,32 +86,34 @@ public class AnimalServiceTest {
     void registerAnimal_WithoutDNAFailure(){
         Animal humanToBeRegistered = AnimalCreator.createEmptyDNAHumanAnimal();
 
-        Exception exception = assertThrows(DNANotFoundException.class, () -> animalService.registerAnimal(humanToBeRegistered));
+        Exception exception = assertThrows(DNANotFoundException.class, () -> animalServiceImpl.registerAnimal(humanToBeRegistered));
 
         String expectedMessage = "DNA sequence not found";
         Assertions.assertTrue(exception.getMessage().contains(expectedMessage));
     }
 
+
+    void statSetup(){
+
+    }
     @Test
     void getAnimalStatistic_Success(){
-        AnimalStatistic returnedStatistic = animalService.getAnimalStatistic();
+
+        AnimalStat stat1 = new AnimalStat(AnimalOrder.HUMAN,2l);
+        AnimalStat stat2 = new AnimalStat(AnimalOrder.SIMIAN,8l);
+        List<AnimalStat> returnStat= new ArrayList<>();
+        returnStat.add(stat1);
+        returnStat.add(stat2);
+        //If we got more tests on getAnimalStatistics, maybe it's a good idea to have an
+        //inner class with some of these configurations setted up.
+        BDDMockito.when(animalRepositoryMock.getAnimalStatistic())
+                .thenReturn(returnStat.stream());
+
+        AnimalStatisticDTO returnedStatistic = animalServiceImpl.getAnimalStatistic();
         Assertions.assertNotNull(returnedStatistic);
-        Assertions.assertEquals(returnedStatistic.getCount_mutant_dna(),2);
-        Assertions.assertEquals(returnedStatistic.getCount_human_dna(),8);
-        Assertions.assertEquals(returnedStatistic.getRatio(),0.2);
+        Assertions.assertEquals(returnedStatistic.getCount_mutant_dna(),8);
+        Assertions.assertEquals(returnedStatistic.getCount_human_dna(),2);
+        Assertions.assertEquals(returnedStatistic.getRatio(),0.8);
     }
-    @Test
-    void isSimian_True(){
-        String[] dnaInput = new String[]{"CCGGTA", "GACGAC", "CCCCTC", "ACATGA", "CTACGC", "TCCGCA"};
-
-
-
-    }
-
-
-//  try(MockedStatic<StringPatternFinder> mockedStatic = Mockito.mockStatic(StringPatternFinder.class)){
-//
-//        mockedStatic.when(StringPatternFinder.isAnyPatternPresentInStringArray(anyInt())).thenReturn(false);
-//    }
 
 }

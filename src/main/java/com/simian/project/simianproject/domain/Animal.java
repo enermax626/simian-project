@@ -12,7 +12,7 @@ public class Animal {
     private Long id;
 
 
-    @Column(name = "DNA", nullable = false, unique = true, length = 10000)
+    @Column(name = "DNA", nullable = false, unique = true)
     private String[] DNA;
 
     @Enumerated(EnumType.STRING)
