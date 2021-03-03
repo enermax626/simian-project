@@ -126,3 +126,10 @@ Dessa forma, tendo a interface StringPatternFinder, e essa implementação reali
 ### Estatísticas dos dados já processados
 Para o outro serviço disponibilizado que retorna as estatísticas de quantidade de cada animal e a proporção de símios, foi criada uma query personalizada para buscar esses valores e um objeto representacional desses dados. O processo foi realizado assim para evitar a necessidade de realizar duas consultas no banco, o que poderia onerar a performance. Então a query retorna os dados, eles são processados e enviados pro consumidor por um DTO que é serializado no body da resposta.
 
+### Concluindo
+
+Gostei muito de desenvolver o projeto, acho que quanto mais praticamos, mais nos aperfeiçoamos.
+Acho que há vários pontos que podem ser pensados para futuras versões da aplicação, como implementar uma persistência de logs dos processos da aplicação em uma base... talvez usando uma fila MQ pra isso ser feito de forma assíncrona e não onerar o sistema.. incluir mais opções de consulta/manipulação dos dados.. aplicar umas técnicas de resiliência pra garantir as respostas das requisições.. dentre outras coisas.. as possibilidades são infinitas haha.
+
+Obrigado :)
+
