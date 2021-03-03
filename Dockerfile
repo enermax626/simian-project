@@ -4,9 +4,9 @@ ARG JAR_FILE=target/simian-project-0.0.1-SNAPSHOT.jar
 
 WORKDIR /opt/app
 
-#ENV SPRING_DATASOURCE_URL=jdbc:h2:mem:testdb
-#ENV SPRING_DATASOURCE_USERNAME=sa
-#ENV SPRING_DATASOURCE_PASSWORD=sa
+ENV SPRING_DATASOURCE_URL=jdbc:sqlserver://simianbdserver.database.windows.net;databaseName=simianbd
+ENV SPRING_DATASOURCE_USERNAME=simianadmin
+ENV SPRING_DATASOURCE_PASSWORD=m3uSimian
 
 COPY ${JAR_FILE} app.jar
 

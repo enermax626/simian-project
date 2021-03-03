@@ -9,6 +9,7 @@ import com.simian.project.simianproject.repository.AnimalRepository;
 import com.simian.project.simianproject.service.AnimalService;
 import com.simian.project.simianproject.util.StringPatternFinder;
 import com.simian.project.simianproject.utilImpl.StringPatternFinderImpl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

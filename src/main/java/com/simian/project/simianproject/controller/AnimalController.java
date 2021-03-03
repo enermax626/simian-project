@@ -36,9 +36,9 @@ public class AnimalController {
     public ResponseEntity<Animal> registerAnimal(@RequestBody AnimalRegisterDTO animalRegisterDTO) {
         Animal registeredAnimal = animalService.registerAnimal(animalMapper.toAnimal(animalRegisterDTO));
 
-        if (registeredAnimal.getAnimalType().equals(AnimalOrder.SIMIAN))
-            return new ResponseEntity<>(registeredAnimal, HttpStatus.OK);
-        return new ResponseEntity<>(registeredAnimal, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(registeredAnimal,
+                    registeredAnimal.getAnimalType() == AnimalOrder.SIMIAN ? HttpStatus.OK : HttpStatus.FORBIDDEN);
+
     }
 
 }
