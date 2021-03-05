@@ -1,7 +1,8 @@
 package com.simian.project.simianproject.util;
 
 public interface StringPatternFinder {
-    boolean isValidInput(char[][] input, char[][] patterns);
+
+    boolean isValidInput(String[] matrix, char[][] patterns);
 
     char[][] getCharMatrix(String[] stringArray);
 

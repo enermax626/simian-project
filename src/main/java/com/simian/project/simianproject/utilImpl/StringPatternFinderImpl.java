@@ -1,53 +1,41 @@
 package com.simian.project.simianproject.utilImpl;
 
 import com.simian.project.simianproject.exception.WrongStringFormatException;
+import com.simian.project.simianproject.util.StringPatternFinder;
+import org.springframework.core.type.filter.RegexPatternTypeFilter;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Component
-public class StringPatternFinderImpl implements com.simian.project.simianproject.util.StringPatternFinder {
+public class StringPatternFinderImpl implements StringPatternFinder {
 
 
     @Override
-    public boolean isValidInput(char[][] input, char[][] patterns) {
-        long arraySize = input.length;
-        long stringSize = input[0].length;
+    public boolean isValidInput(String[] matrix, char[][] patterns) {
+        long arraySize = matrix.length;
+        long stringSize = matrix[0].length();
         boolean validCharacter = true;
 
-        if (arraySize != stringSize)
+        if (stringSize != arraySize)
             return false;
 
-        if(Arrays.stream(input)
-                .filter(row -> row.length != stringSize)
-                .findFirst()
-                .isPresent())
+        if (Arrays.stream(matrix).parallel()
+                .anyMatch(row -> row.length() != stringSize))
             return false;
 
-        //populating pattern characters so we can compare all of them in the matrix.
-        char[] patternCharacters = new char[patterns.length];
-
-        //Important to note that we assume that patterns always will be equal sequence characters
-        //that's why we populate the pattern array with only the first character of each pattern
-        //if a pattern can have different characters, we need to change this algorithm to validate
-        //the whole array of each pattern.
-        for (int i = 0; i < patterns.length; i++) {
-            patternCharacters[i] = patterns[i][0];
-        }
+        String patternChars = Arrays.stream(patterns).parallel().map(s -> s[0]).collect(Collectors.toList()).toString();
+        String regex = ".*[^" + patternChars + "].*";
 
 
-        for (int row = 0; row < arraySize; row++) {
-            for (int col = 0; col < arraySize; col++) {
-                if (!validCharacter)
-                    return false;
-                validCharacter = false;
-                for (int pat = 0; pat < patternCharacters.length; pat++) {
-                    if (input[row][col] == patternCharacters[pat])
-                        validCharacter = true;
-                }
-            }
-        }
-        return validCharacter;
+        if(Arrays.stream(matrix).parallel().anyMatch(m ->
+                m.matches(regex)))
+            return false;
+
+
+        return true;
     }
 
     @Override
@@ -160,7 +148,7 @@ public class StringPatternFinderImpl implements com.simian.project.simianproject
     // and find a pattern in a matrix of any type.
     // It uses KMP pattern searching algorithm
     @Override
-    public boolean isPatternPresentInRowColumn(char[][] charArrayMatrix, char[] pattern){
+    public boolean isPatternPresentInRowColumn(char[][] charArrayMatrix, char[] pattern) {
 
         int N = charArrayMatrix.length;
         char[] col = new char[N];
@@ -187,12 +175,11 @@ public class StringPatternFinderImpl implements com.simian.project.simianproject
 
         char[][] charMatrix = getCharMatrix(stringArray);
 
-        if (!isValidInput(charMatrix, patterns))
+        if (!isValidInput(stringArray, patterns))
             throw new WrongStringFormatException("Wrong array size or character not expected, verify your data");
 
-        if(Arrays.stream(patterns)
-                .filter(entry -> isPatternPresentInStringArray(charMatrix, entry))
-                .findFirst().isPresent())
+        if (Arrays.stream(patterns)
+                .anyMatch(entry -> isPatternPresentInStringArray(charMatrix, entry)))
             return true;
 
         return false;
@@ -202,9 +189,7 @@ public class StringPatternFinderImpl implements com.simian.project.simianproject
     public boolean isPatternPresentInStringArray(char[][] charMatrix, char[] pattern) {
 
         if (!isPatternPresentInRowColumn(charMatrix, pattern)) {
-            if (!isPatternPresentInDiagonal(charMatrix, pattern)) {
-                return false;
-            }
+            return isPatternPresentInDiagonal(charMatrix, pattern);
         }
 
         return true;
